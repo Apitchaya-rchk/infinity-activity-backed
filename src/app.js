@@ -1,32 +1,35 @@
-const express = require('express'); // *
+const express = require('express'); 
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const mongoose = require('mongoose');
 
+// require('dotenv').config();
 const config =require('./config');
+// const PORT = config.port;
 
-const userRouter = require('./routes/user.js');
 const recordRouter = require('./routes/record.js');
 
-const app = express(); //*
+const app = express(); 
 
 app.use(bodyParser.json());
 
-// แบบมี users
-// app.use('/users',userRouter);
-app.use('/records', recordRouter);
+app.use(
+    cors({
+      origin: '*',
+      optionsSuccessStatus: 200,
+    })
+  );
 
+app.use('/records', recordRouter);
 
 const boot = async () => {
     // connext to mongodb
-    await mongoose.connect(config.uri);
-
+    await mongoose.connect(config.mongoUri, config.mongoOptions);
     // start express server
     app.listen(4000, () => {
         console.log('Server is running')
     });
-
 };
-
 boot();
 
 
