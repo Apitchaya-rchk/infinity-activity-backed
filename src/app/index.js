@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -9,20 +9,23 @@ const PORT = config.port;
 
 const recordRouter = require('../routes/record.js');
 
-const app = express();
+const app = express(); 
 
 if (config.isVercel) {
     app.use(async (req, res, next) => {
-        await mongoose.connect(config.mongoUri, config.mongoOptions);
-        return next();
+      await mongoose.connect(config.mongoUri, config.mongoOptions);
+      return next();
     });
-}
+  }
 
 app.use(bodyParser.json());
 
 app.use(
-    cors()
-);
+    cors({
+      origin: '*',
+      optionsSuccessStatus: 200,
+    })
+  );
 
 app.use('/records', recordRouter);
 
